@@ -1,0 +1,3 @@
+D:/Study/C(C++)/University/TFormula/cmake-build-debug/CMakeFiles/TFormula.dir
+D:/Study/C(C++)/University/TFormula/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Study/C(C++)/University/TFormula/cmake-build-debug/CMakeFiles/rebuild_cache.dir
