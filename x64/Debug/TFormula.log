@@ -1,0 +1,26 @@
+﻿  Source.cpp
+  TFormula.cpp
+  Translator.cpp
+  Validator.cpp
+D:\Study\C(C++)\University\TFormula\Validator.cpp(47,50): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+D:\Study\C(C++)\University\TFormula\Validator.cpp(51,57): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+D:\Study\C(C++)\University\TFormula\Validator.cpp(52,50): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+D:\Study\C(C++)\University\TFormula\Validator.cpp(60,53): warning C4267: аргумент: преобразование из "size_t" в "_Ty"; возможна потеря данных
+          with
+          [
+              _Ty=int
+          ]
+  Создание кода...
+  TFormula.vcxproj -> D:\Study\C(C++)\University\TFormula\x64\Debug\TFormula.exe
