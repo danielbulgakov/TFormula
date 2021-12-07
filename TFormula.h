@@ -20,8 +20,13 @@ private:
     
 
     std::vector<Token> ToTokens(std::string& MathExprs);
-    std::string ReplaceAll(const std::string& inputStr, const std::string& src, const std::string& dst);
-    std::string CheckValues(std::string& MathExpr);    
+    void DefineValues(std::vector<Token> & fml);
+
+    // TO delete
+    //std::string ReplaceAll(const std::string& inputStr, const std::string& src, const std::string& dst);
+    //std::string CheckValues(std::string& MathExpr);    
+    // --
+
     bool isletter(char ch);
     void VectorToStack();
     void IncorrectExprMess();

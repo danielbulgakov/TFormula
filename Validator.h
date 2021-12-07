@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iterator>
 #include <algorithm>
+#include <map>
 class TToken {
 private:
 	std::string Value;
@@ -17,6 +18,7 @@ public:
 	TToken() :  Pos(0) {}
 	const std::string& GetValue()const			{ return Value; }
 	size_t GetPosition()const					{ return Pos; }
+	void SetValue(std::string value);
 	bool operator= (const TToken& tmp) const;
 	bool operator!= (const TToken& tmp) const;
 	TToken& operator=(const TToken& tmp);

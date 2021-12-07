@@ -1,5 +1,10 @@
 #include "Validator.h"
 
+void TToken::SetValue(std::string value)
+{
+    this->Value = value;
+}
+
 bool TToken::operator=(const TToken& tmp) const
 {
     return (Value == tmp.GetValue() && Pos == tmp.GetPosition());
@@ -13,6 +18,8 @@ bool TToken::operator!=(const TToken& tmp) const
 TToken& TToken::operator=(const TToken& tmp)
 = default;
 
+
+
 size_t Validator::GetError()
 {
     return ERRORS;
@@ -25,6 +32,7 @@ void Validator::Validate()
     for (const auto& tok : Tokens) {
 
         if ((tok.GetValue()[0] >= 'a' && tok.GetValue()[0] <= 'z')) {
+            std::cout << (std::string("Define value = \"") + tok.GetValue()[0]) + "\"" + ", POS = " << tok.GetPosition() << std::endl;
             ERRORS++;
         }
         
@@ -34,7 +42,7 @@ void Validator::Validate()
                         if (!(tok.GetValue()[0] == '*' || tok.GetValue()[0] == '/'))
                             if (!(tok.GetValue()[0] == '-' || tok.GetValue()[0] == '+' || tok.GetValue()[0] == ' ')) {
                                  ERRORS++;
-                                std::cout << (std::string("Wrong symbol = \"") + tok.GetValue()[0])+"\"" + " POS = " << tok.GetPosition() << std::endl;
+                                std::cout << (std::string("Wrong symbol = \"") + tok.GetValue()[0])+"\"" + ", POS = " << tok.GetPosition() << std::endl;
                             }
     
         
@@ -87,7 +95,7 @@ void Validator::PrintTable()
     }
 
     Result.Print();
-    std::cout << std::endl << "Количество ошибок в расстановке скобок = " <<  ERRORS << std::endl;
+    std::cout << std::endl << "Количество ошибок = " <<  ERRORS << std::endl;
 
 
 }

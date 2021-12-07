@@ -9,10 +9,10 @@ std::vector<Token> Translator::Translate()
 
     for (const auto& tok : Input) {
 
+        int ind = tok.GetValue().size() - 1;
 
-
-        if ((tok.GetValue()[0] >= 'a' && tok.GetValue()[0] <= 'z' ||
-            tok.GetValue()[0] >= '0' && tok.GetValue()[0] <= '9')) 
+        if ((tok.GetValue()[ind] >= 'a' && tok.GetValue()[ind] <= 'z' ||
+            tok.GetValue()[ind] >= '0' && tok.GetValue()[ind] <= '9'))
         {
             Answer.push_back(tok);
         }
@@ -20,15 +20,15 @@ std::vector<Token> Translator::Translate()
         {
             Stack.Push(tok);
         }
-        else if (keyMap.find(tok.GetValue()[0])->second == 0) {
+        else if (keyMap.find(tok.GetValue()[ind])->second == 0) {
             Stack.Push(tok);
         }
         
 
 
-        else if (keyMap.find(tok.GetValue()[0])->second == 1) {
+        else if (keyMap.find(tok.GetValue()[ind])->second == 1) {
             while (!Stack.IsEmpty() &&
-                keyMap.find(Stack.Top().GetValue()[0])->second != 0
+                keyMap.find(Stack.Top().GetValue()[ind])->second != 0
                ) {
                  Answer.push_back(Stack.Pop()); 
             }
@@ -37,13 +37,13 @@ std::vector<Token> Translator::Translate()
             }
         }
 
-        else if (!Stack.IsEmpty() && keyMap.find(tok.GetValue()[0])->second > keyMap.find(Stack.Top().GetValue()[0])->second)
+        else if (!Stack.IsEmpty() && keyMap.find(tok.GetValue()[ind])->second > keyMap.find(Stack.Top().GetValue()[ind])->second)
         {
             Stack.Push(tok);
         }
 
         else{
-            while (!Stack.IsEmpty() && (keyMap.find(Stack.Top().GetValue()[0])->second >= keyMap.find(tok.GetValue()[0])->second)) {
+            while (!Stack.IsEmpty() && (keyMap.find(Stack.Top().GetValue()[ind])->second >= keyMap.find(tok.GetValue()[ind])->second)) {
                 Token tk = Stack.Pop();
                 if (tk.GetValue() != ")" && tk.GetValue() != "(")
                     Answer.push_back(tk);
@@ -70,7 +70,6 @@ std::vector<Token> Translator::Translate()
                 Answer.push_back(Stack.Pop());
         }
     }
-
 
 
 

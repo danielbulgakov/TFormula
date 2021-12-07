@@ -4,7 +4,7 @@ std::vector<Token> TFormula::ToTokens(std::string& MathExprs) {
     std::string MathExpr = MathExprs;
     auto NoSpaceEnd = std::remove(MathExpr.begin(), MathExpr.end(), ' ');
     MathExpr.erase(NoSpaceEnd, MathExpr.end());
-    //MathExpr = CheckValues(MathExpr);
+    bool isdefinevalues = false;
     std::vector <TToken> res;
     std::string gg;
     size_t pos = 0;
@@ -12,8 +12,11 @@ std::vector<Token> TFormula::ToTokens(std::string& MathExprs) {
     for (size_t i = 0; i < MathExpr.size(); i++, pos++) {
         if (MathExpr[i] == '.') MathExpr[i] = ',';
         if (MathExpr[i] == ' ') continue;
+        if (MathExpr[i] == ';') isdefinevalues = true;
 
-        if (isdigit(MathExpr[i]) || MathExpr[i] == ',') {
+        if (isdigit(MathExpr[i]) || MathExpr[i] == ',' ||
+            (isdefinevalues && MathExpr[i] == '-')
+            ) {
             gg += MathExpr[i];
             if (gg.size() > 1) pos--;
         }
@@ -42,8 +45,60 @@ std::vector<Token> TFormula::ToTokens(std::string& MathExprs) {
         }
     }
 
+
+
     return res;
 }
+
+void TFormula::DefineValues(std::vector<Token> &fml)
+{
+    std::map<std::string, std::string> ValuesTable;
+    size_t EndExpressionPos = 0;
+    std::string Name, Value;
+
+    for (const auto& x : fml) { // create map values
+        
+        if (x.GetValue() == ";" && EndExpressionPos == 0)
+            EndExpressionPos = x.GetPosition();
+        if (EndExpressionPos != 0) {
+            if (isletter(x.GetValue()[0]))
+                Name = x.GetValue();
+            if (isdigit(x.GetValue()[0]) || x.GetValue()[0] == '-')
+                Value = x.GetValue();
+            if (Name.size() != 0 && Value.size() != 0) {
+                ValuesTable.insert((std::pair<std::string, std::string>(Name, Value)));
+                Value.clear();
+                Name.clear();
+            }
+        }
+    }
+
+    if (EndExpressionPos == 0) return;
+
+    std::map<std::string, std::string>::iterator it;
+    
+    for (auto& x : fml) {
+        it = ValuesTable.find(x.GetValue());
+        if (it != ValuesTable.end()) {
+            x.SetValue(it->second);
+        }
+    }
+    size_t tmp = fml.size();
+    for (size_t i = 0; i < tmp - EndExpressionPos; i++) {
+        fml.pop_back();
+    }
+
+
+
+
+
+
+
+
+
+
+}
+
 
 bool TFormula::isletter(char ch) {
      return (ch >= 'a' && ch <= 'z'); 
@@ -51,7 +106,7 @@ bool TFormula::isletter(char ch) {
 
 
 
-
+/*
 std::string TFormula::ReplaceAll(const std::string& inputStr, const std::string& src, const std::string& dst)
 {
     std::string result(inputStr);
@@ -98,20 +153,25 @@ std::string TFormula::CheckValues(std::string& MathExpr)
     }
     return result;
 }
+*/
+
 
 void TFormula::VectorToStack() {
     for (const auto& x : Expt) {
         stack.Push(x);
+
     }
 }
 
 
 TFormula::TFormula(std :: string exp): Exp(std::move(std::move(exp))) {
 	std::vector<Token> aaa = ToTokens(Exp);
+    DefineValues(aaa);
     if (isIncorrect == true) return;
 	Validator vld(aaa);
 	vld.Validate();
     if (vld.GetError() != 0) {
+        vld.PrintTable();
         isIncorrect = true;
         return;
     }
@@ -121,14 +181,12 @@ TFormula::TFormula(std :: string exp): Exp(std::move(std::move(exp))) {
 	VectorToStack();
 }
 
-TFormula::TFormula()
-{
-}
+TFormula::TFormula(){}
+
 
 double TFormula::Evaluate()
 {
     if (isIncorrect) {
-        IncorrectExprMess();
         return NAN;
     }
     assert(!stack.IsEmpty());
@@ -147,7 +205,7 @@ double TFormula::Evaluate()
         }
     }
     else {
-        unsigned i;  x = stod(tk.GetValue(), reinterpret_cast<size_t*>(&i));  assert(i == n);
+         x = stod(tk.GetValue());  
     }
     return x;
 }
@@ -173,7 +231,4 @@ void TFormula::FromTXT(std::string Path)
     return;
 }
 
-void TFormula::IncorrectExprMess()
-{
-    std::cout << "\nПерменные выражения введены неверно!\n";
-}
+
