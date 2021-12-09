@@ -1,5 +1,2 @@
 ﻿  TFormula.cpp
-  Translator.cpp
-D:\Study\C(C++)\University\TFormula\Translator.cpp(12,44): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  Создание кода...
   TFormula.vcxproj -> D:\Study\C(C++)\University\TFormula\x64\Debug\TFormula.exe

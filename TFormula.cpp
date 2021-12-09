@@ -221,6 +221,7 @@ void TFormula::FromTXT(std::string Path)
         std::getline(inFile, buff);
         std::cout << std::endl;
         std::cout << buff << std::endl;
+        if (buff.size() == 0) continue;
         TFormula Formula(buff);
         
         

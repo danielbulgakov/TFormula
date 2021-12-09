@@ -62,6 +62,7 @@ void Validator::Validate()
         }
 
     }
+
     if (!Stack.IsEmpty())
     {
         while (!Stack.IsEmpty()) {
