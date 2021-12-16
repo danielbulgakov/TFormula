@@ -7,6 +7,8 @@
 #include "Translator.h"
 #include "Validator.h"
 #include "TStack.h"
+#include <sstream>
+#include <iomanip>
 using namespace  std;
 class TFormula
 {
@@ -28,14 +30,17 @@ private:
     // --
 
     bool isletter(char ch);
+    void PrintTranslator();
     void VectorToStack();
     void IncorrectExprMess();
-
+    void TryEval(TFormula& fm);
 public:
     TFormula(std::string exp);
     double Evaluate();
     TFormula();
     void FromTXT(std::string Path);
+    void ToTXT(std::string Path, std::string Answer);
+    
 };
 
 

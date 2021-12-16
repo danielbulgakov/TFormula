@@ -154,7 +154,14 @@ std::string TFormula::CheckValues(std::string& MathExpr)
     return result;
 }
 */
-
+void TFormula::PrintTranslator() {
+    std::cout << endl << "Транслятор : ";
+    for (auto x : Expt) {
+        std::cout << x.GetValue() << " ";
+    }
+    std::cout << endl;
+    return;
+}
 
 void TFormula::VectorToStack() {
     for (const auto& x : Expt) {
@@ -171,13 +178,14 @@ TFormula::TFormula(std :: string exp): Exp(std::move(std::move(exp))) {
 	Validator vld(aaa);
 	vld.Validate();
     if (vld.GetError() != 0) {
-        vld.PrintTable();
         isIncorrect = true;
+        vld.PrintTable();
         return;
     }
-	vld.PrintTable();
+
 	Translator trs(aaa);
 	Expt = trs.Translate();
+
 	VectorToStack();
 }
 
@@ -187,9 +195,13 @@ TFormula::TFormula(){}
 double TFormula::Evaluate()
 {
     if (isIncorrect) {
+        throw std::invalid_argument("Неверно введено выражение");
         return NAN;
     }
-    assert(!stack.IsEmpty());
+    if (stack.IsEmpty()) {
+        throw std::invalid_argument("Неопределенная операция");
+        return NAN;
+    }
     double x, y;
     Token tk(stack.Top()); stack.Pop();
     size_t n = tk.GetValue().size();
@@ -200,7 +212,10 @@ double TFormula::Evaluate()
         else if (tk.GetValue()[0] == '-') x -= y;
         else if (tk.GetValue()[0] == '*') x *= y;
         else if (tk.GetValue()[0] == '/') {
-            assert(y != 0);
+            if (y == 0) {
+                throw std::overflow_error("Деление на ноль в " + std::to_string(tk.GetPosition()) + " позиции");
+                return NAN;
+            }
             x /= y;
         }
     }
@@ -217,19 +232,67 @@ void TFormula::FromTXT(std::string Path)
     std::string buff;
     inFile.open(Path);
     while (inFile.peek() != EOF) {
-        std::cout << "=========================================";
+        std::cout << "======================================";
+
         std::getline(inFile, buff);
         std::cout << std::endl;
         std::cout << buff << std::endl;
         if (buff.size() == 0) continue;
+        try {
+            TFormula Formula(buff);
+            double Answer = 0;
+            Answer = Formula.Evaluate();
+            std::cout << "Ответ: " << Answer << std::endl;
+
+
+            std::ostringstream oss;
+            oss << std::setprecision(6) << std::noshowpoint << Answer;
+            ToTXT("Results.txt", oss.str());
+        }
+        catch (std::invalid_argument& e) {
+            std::cout << "Ответ: " << e.what() << std::endl;
+            ToTXT("Results.txt", e.what());
+        }
+        catch (std::overflow_error& e) {
+            std::cout << "Ответ: " << e.what() << std::endl;
+            ToTXT("Results.txt", e.what());
+        }
+        /*
         TFormula Formula(buff);
+        double Answer = 0;
+        try {
+            Answer = Formula.Evaluate();
+            std::cout << "Ответ: " << Answer << std::endl;
+
+
+            std::ostringstream oss;
+            oss << std::setprecision(6) << std::noshowpoint << Answer;         
+
+            ToTXT("Results.txt", oss.str() );
+        }
+        catch (std::invalid_argument& e) {
+            std::cout << "Ответ: " << e.what() << std::endl;
+            ToTXT("Results.txt", e.what() );
+        }
+        catch (std::overflow_error& e) {
+            std::cout << "Ответ: " << e.what() << std::endl;
+            ToTXT("Results.txt", e.what() );
+        }
+        */
+
         
-        
-        std::cout << "Ответ: " << Formula.Evaluate() << std::endl;
     }
-    std::cout << "=========================================";
+
     inFile.close();
     return;
 }
 
+void TFormula::ToTXT(std::string Path, std::string Answer) {
 
+    ofstream ofFile;
+    ofFile.open(Path, std::ios_base::app | std::ios_base::in );
+    if (ofFile.is_open())
+        ofFile << Answer << endl;
+    ofFile.close();
+    return;
+}

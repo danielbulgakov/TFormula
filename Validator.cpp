@@ -32,8 +32,8 @@ void Validator::Validate()
     for (const auto& tok : Tokens) {
 
         if ((tok.GetValue()[0] >= 'a' && tok.GetValue()[0] <= 'z')) {
-            std::cout << (std::string("Define value = \"") + tok.GetValue()[0]) + "\"" + ", POS = " << tok.GetPosition() << std::endl;
             ERRORS++;
+            throw std::invalid_argument("Определите значение = " + tok.GetValue() + ", Позиция = " + std::to_string(tok.GetPosition()));
         }
         
             if (!(tok.GetValue()[0] >= 'a' && tok.GetValue()[0] <= 'z'))
@@ -42,7 +42,7 @@ void Validator::Validate()
                         if (!(tok.GetValue()[0] == '*' || tok.GetValue()[0] == '/'))
                             if (!(tok.GetValue()[0] == '-' || tok.GetValue()[0] == '+' || tok.GetValue()[0] == ' ')) {
                                  ERRORS++;
-                                std::cout << (std::string("Wrong symbol = \"") + tok.GetValue()[0])+"\"" + ", POS = " << tok.GetPosition() << std::endl;
+                                 throw std::invalid_argument(std::string("Неверный символ = ") + tok.GetValue()  + ", Позиция = " + std::to_string(tok.GetPosition()));
                             }
     
         
